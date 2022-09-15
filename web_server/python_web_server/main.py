@@ -6,7 +6,6 @@ def start_server():
         server.bind(("127.0.0.1", 8080))
         server.listen(12)
         while True:
-            print("Working..")
             client_socket, address = server.accept()
             data = client_socket.recv(1024).decode("utf-8")
             content = request_page(data)
