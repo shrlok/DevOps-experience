@@ -14,3 +14,7 @@ services:
     ports:
       - 8080:8080
 
+  python_web_server:
+    build: ./
+    ports:
+      - 8086:8086
