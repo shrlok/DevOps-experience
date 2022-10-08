@@ -1,7 +1,7 @@
 import psycopg2
 from datetime import datetime
 
-dt = datetime.now()
+
 class PostgresApi():
     def __init__(self):
         self.connection = psycopg2.connect(
@@ -36,6 +36,7 @@ class PostgresApi():
     def put_data(self, data):
 
         try:
+            dt = datetime.now()
             add_data = f''' INSERT INTO test_table (Text, Date) VALUES('{data}', '{dt}'); '''
             self.cursor.execute(add_data)
 
