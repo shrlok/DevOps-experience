@@ -47,11 +47,25 @@ class PostgresApi():
         self.cursor.execute('''SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='test_table';''')
         return bool(self.cursor.rowcount)
 
+    def get_data(self, id):
+        self.cursor.execute('''SELECT * FROM "test_table"''')
+        for row in self.cursor:
+            if row[0] == id:
+                print(row)
+                return(row)
+
+    def list_data(self):
+        self.cursor.execute('''SELECT * FROM "test_table"''')
+        list= {}
+        for row in self.cursor:
+            list[row[0]] = str(row[2])
+        return list
 
 con = PostgresApi()
 con.create_table()
 con.put_data("hello")
 print(con.table_exist())
-
+con.get_data(1)
+con.list_data())
 
 
