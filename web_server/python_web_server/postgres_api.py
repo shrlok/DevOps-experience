@@ -13,14 +13,9 @@ class PostgresApi():
         self.cursor = self.connection.cursor()
         self.connection.autocommit = True
 
+
     def create_table(self):
         try:
-            # create_table = ''' CREATE TABLE test_table
-            #     (Id serial PRIMARY KEY,
-            #     Text text NOT NULL,
-            #     Date timestamp
-            #     )
-            #     '''
             create_table = ''' CREATE TABLE IF NOT EXISTS test_table
                 (Id serial PRIMARY KEY,
                 Text text NOT NULL,
@@ -29,9 +24,9 @@ class PostgresApi():
                 '''
             self.cursor.execute(create_table)
 
-
         except Exception as _ex:
             print("[INFO] Error whith PostgrSQL: ", _ex)
+
 
     def put_data(self, data):
 
@@ -47,12 +42,13 @@ class PostgresApi():
         self.cursor.execute('''SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='test_table';''')
         return bool(self.cursor.rowcount)
 
+
     def get_data(self, id):
         self.cursor.execute('''SELECT * FROM "test_table"''')
         for row in self.cursor:
             if row[0] == id:
-                print(row)
-                return(row)
+                return(row[1])
+
 
     def list_data(self):
         self.cursor.execute('''SELECT * FROM "test_table"''')
@@ -61,11 +57,12 @@ class PostgresApi():
             list[row[0]] = str(row[2])
         return list
 
-con = PostgresApi()
-con.create_table()
-con.put_data("hello")
-print(con.table_exist())
-con.get_data(1)
-con.list_data())
+
+#con = PostgresApi()
+# con.create_table()
+# con.put_data("hello")
+# print(con.table_exist())
+#con.get_data(2)
+# con.list_data()
 
 
