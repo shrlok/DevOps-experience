@@ -6,33 +6,38 @@ con = PostgresApi()
 
 try:
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("0.0.0.0", 8086))
+    server.bind(("127.0.0.1", 8086))
     server.listen(12)
     while True:
         client_socket, address = server.accept()
         data = client_socket.recv(1024).decode("utf-8")
         request = data.split(" ")[1]
-        print(con.get_data(1))
+        #тестовое, показывает тело запроса
+        print(data)
 
-        if "/put" in request:
-            data = request.split(":")
-            con.put_data(data[1])
-            content = f"done!, string: {data[1]}, added".encode("utf-8")
+        if "POST" in data: #Сейчас записывает любой пост запрос в таблицу
+            post_data = data.split('\n')[-1]
+            con.put_data(post_data)
+            content = f"done!, string: {post_data}, added".encode("utf-8")
         if "/list" in request:
             data = con.list_data()
             data_string = json.dumps(data)
             content = data_string.encode("utf-8")
         if "/get" in request:
-            id = request.split(":")
+            # возвращает запись по запросу get?={id}
+            id = request.split("=")
             data = con.get_data(int(id[1]))
+            # возвращает запись по запросу get/{id}
+            #id = request.split("/")
+            #data = con.get_data(int(id[2]))
+
             data_string = json.dumps(data)
             content = data_string.encode("utf-8")
 
 
+        #возвращает ответ в браузер
         HDRS = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n".encode("utf-8")
-
         client_socket.send(HDRS + content)
-
         client_socket.shutdown(socket.SHUT_WR)
 
 
